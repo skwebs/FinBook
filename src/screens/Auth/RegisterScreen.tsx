@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import Input from '../../components/Input';
 
 // Define TypeScript types for form values
 type RegisterFormData = {
@@ -55,18 +56,14 @@ const RegisterScreen: React.FC = () => {
           control={control}
           name="name"
           render={({ field: { onChange, onBlur, value } }) => (
-            <View>
-              <Text>Name</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={[styles.input]}
-                  placeholder="Name"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-                {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>}
-              </View>
+            <View style={{ marginBottom: 2 }}>
+              <Input
+                label='Name'
+                name="name"
+                control={control}
+                error={errors.name}
+                placeholder="Name"
+              />
             </View>
           )}
         />
@@ -76,18 +73,14 @@ const RegisterScreen: React.FC = () => {
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
 
-            <View>
-              <Text>Email</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={[styles.input]}
-                  placeholder="email"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-                {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
-              </View>
+            <View style={{ marginBottom: 5 }}>
+              <Input
+                label='Email'
+                name="email"
+                control={control}
+                error={errors.email}
+                placeholder="Email"
+              />
             </View>
           )}
         />
@@ -97,21 +90,14 @@ const RegisterScreen: React.FC = () => {
           name="password"
           render={({ field: { onChange, onBlur, value } }) => (
 
-            <View>
-              <Text>Password</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                />
-                {errors.password && errors.password && (
-                  <Text style={styles.errorText}>{errors.password.message}</Text>
-                )}
-              </View>
+            <View style={{ marginBottom: 5 }}>
+              <Input
+                label='Password'
+                name="password"
+                control={control}
+                error={errors.password}
+                placeholder="Password"
+              />
             </View>
           )}
         />
@@ -120,19 +106,14 @@ const RegisterScreen: React.FC = () => {
           control={control}
           name="confirmPassword"
           render={({ field: { onChange, onBlur, value } }) => (
-            <View>
-              <Text>Confirm Password</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Confirm Password"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                />
-                {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>}
-              </View>
+            <View style={{ marginBottom: 5 }}>
+              <Input
+                label='Confirm Password'
+                name="confirmPassword"
+                control={control}
+                error={errors.confirmPassword}
+                placeholder="Confirm Password"
+              />
             </View>
           )}
         />

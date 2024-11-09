@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AuthRootStackParamList } from '../../navigation/AuthNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Input from '../../components/Input';
 
 // Define TypeScript types for form values
 type LoginFormData = {
@@ -22,7 +23,11 @@ const schema = Yup.object().shape({
     .email('Enter a valid email'),
   password: Yup.string()
     .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/[a-z]/, 'Password must contain at least one Small letter')
+    .matches(/[A-Z]/, 'Password must contain at least one Capital letter')
+    .matches(/\d/, 'Password must contain at least one digit')
+    .matches(/[@$!%*?&#]/, 'Password must contain at least one special character'),
 });
 
 const LoginScreen = ({ navigation }: LoginScreenProps) => {
@@ -51,18 +56,14 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
 
-            <View>
-              <Text>Email</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={[styles.input]}
-                  placeholder="email"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-                {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
-              </View>
+            <View style={{ marginBottom: 5 }}>
+              <Input
+                label='Email'
+                name="email"
+                control={control}
+                error={errors.email}
+                placeholder="Email"
+              />
             </View>
           )}
         />
@@ -71,26 +72,18 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           control={control}
           name="password"
           render={({ field: { onChange, onBlur, value } }) => (
-
-            <View>
-              <Text>Password</Text>
-              <View style={styles.inputWrapper}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                />
-                {errors.password && errors.password && (
-                  <Text style={styles.errorText}>{errors.password.message}</Text>
-                )}
-              </View>
+            <View style={{ marginBottom: 5 }}>
+              <Input
+                label='Password'
+                name="password"
+                control={control}
+                error={errors.password}
+                placeholder="Password"
+                secureTextEntry
+              />
             </View>
           )}
         />
-
 
         <Button title="Login" onPress={handleSubmit(onSubmit)} />
 
