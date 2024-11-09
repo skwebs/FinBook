@@ -5,7 +5,7 @@ import AuthNavigator from './navigation/AuthNavigator';
 
 
 function App(): React.JSX.Element {
-  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(true)
+  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(false)
   return (
     <NavigationContainer>
       {isAuthenticated ? <MainNavigator /> : <AuthNavigator />}

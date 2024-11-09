@@ -22,14 +22,18 @@ const schema = Yup.object().shape({
     .email('Enter a valid email'),
   password: Yup.string()
     .required('Password is required')
-    .min(6, 'Password must be at least 6 characters'),
+    .min(6, 'Password must be at least 6 characters')
+    .matches(/[a-z]/, 'Password must contain at least one Small letter')
+    .matches(/[A-Z]/, 'Password must contain at least one Capital letter')
+    .matches(/\d/, 'Password must contain at least one digit')
+    .matches(/[@$!%*?&#]/, 'Password must contain at least one special character'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords must match')
     .required('Confirm Password is required'),
 });
 
 const RegisterScreen: React.FC = () => {
-  const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
+  const { control, handleSubmit, formState: { errors, touchedFields }, } = useForm<RegisterFormData>({
     resolver: yupResolver(schema),
   });
 
@@ -52,14 +56,17 @@ const RegisterScreen: React.FC = () => {
           name="name"
           render={({ field: { onChange, onBlur, value } }) => (
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Name"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-              {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>}
+              <Text>Name</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={[styles.input]}
+                  placeholder="Name"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+                {errors.name && <Text style={styles.errorText}>{errors.name.message}</Text>}
+              </View>
             </View>
           )}
         />
@@ -68,16 +75,19 @@ const RegisterScreen: React.FC = () => {
           control={control}
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
+
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                keyboardType="email-address"
-              />
-              {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+              <Text>Email</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={[styles.input]}
+                  placeholder="email"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+                {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+              </View>
             </View>
           )}
         />
@@ -86,16 +96,22 @@ const RegisterScreen: React.FC = () => {
           control={control}
           name="password"
           render={({ field: { onChange, onBlur, value } }) => (
+
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-              {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+              <Text>Password</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+                {errors.password && errors.password && (
+                  <Text style={styles.errorText}>{errors.password.message}</Text>
+                )}
+              </View>
             </View>
           )}
         />
@@ -105,22 +121,25 @@ const RegisterScreen: React.FC = () => {
           name="confirmPassword"
           render={({ field: { onChange, onBlur, value } }) => (
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Confirm Password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-              {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>}
+              <Text>Confirm Password</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm Password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+                {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>}
+              </View>
             </View>
           )}
         />
 
         <Button title="Register" onPress={handleSubmit(onSubmit)} />
       </View>
-    </View>
+    </View >
   );
 };
 
@@ -133,18 +152,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 8,
-  },
+
   imageContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -165,6 +173,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 15,
     paddingVertical: 35
+  },
+
+  inputWrapper: {
+    height: 60
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 2,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 13
   },
 });
 

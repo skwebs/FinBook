@@ -5,10 +5,10 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { AuthRootStackParamList } from '../../navigation/AuthNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define TypeScript types for form values
 type LoginFormData = {
-  username: string;
   email: string;
   password: string;
 };
@@ -17,9 +17,6 @@ type LoginScreenProps = NativeStackScreenProps<AuthRootStackParamList, 'Login'>
 
 // Define Yup validation schema
 const schema = Yup.object().shape({
-  username: Yup.string()
-    .required('Username is required')
-    .min(3, 'Username must be at least 3 characters'),
   email: Yup.string()
     .required('Email is required')
     .email('Enter a valid email'),
@@ -38,9 +35,6 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
     // Proceed with API call for registration
   };
 
-  const onPress = () => {
-    Alert.alert("onPress");
-  }
 
   return (
     <View style={styles.container}>
@@ -50,37 +44,25 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
       {/* <Text style={styles.title}>Login</Text> */}
 
       <View style={styles.formContainer}>
-        <Controller
-          control={control}
-          name="username"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Username"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-              {errors.username && <Text style={styles.errorText}>{errors.username.message}</Text>}
-            </View>
-          )}
-        />
+
 
         <Controller
           control={control}
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
+
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                keyboardType="email-address"
-              />
-              {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+              <Text>Email</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={[styles.input]}
+                  placeholder="email"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+                {errors.email && <Text style={styles.errorText}>{errors.email.message}</Text>}
+              </View>
             </View>
           )}
         />
@@ -89,16 +71,22 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
           control={control}
           name="password"
           render={({ field: { onChange, onBlur, value } }) => (
+
             <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-              {errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+              <Text>Password</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+                {errors.password && errors.password && (
+                  <Text style={styles.errorText}>{errors.password.message}</Text>
+                )}
+              </View>
             </View>
           )}
         />
@@ -126,18 +114,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 8,
-  },
+
   imageContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -158,6 +135,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 15,
     paddingVertical: 35
+  },
+
+  inputWrapper: {
+    height: 60
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 2,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 13
   },
 });
 
